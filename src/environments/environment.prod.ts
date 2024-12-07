@@ -1,4 +1,4 @@
 export const environment = {
-  apiurl: 'https://lang31-production.up.railway.app/api/',
+  apiurl: `lang31/api/`,
   production: true
 };
