@@ -1,0 +1,116 @@
+<div style="width:100%; height: 100vh;">
+  <mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>School Lessons Admin</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+  <div fxLayout="row" style="height:91%;">
+    <div fxFlex="30" style="padding:10px;" fxLayout="column">
+
+      <mat-form-field appearance="fill">
+        <mat-label>Choose Standard</mat-label>
+        <mat-select [(value)]="selectedLanguage" (selectionChange)="getLessons()">
+          <mat-option *ngFor="let language of languages" [value]="language.value">
+            {{language.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Choose Subject</mat-label>
+        <mat-select [(value)]="selectedLevel" (selectionChange)="getLessons()"
+          [disabled]="selectedLanguage.trim().length <= 0">
+          <mat-option *ngFor="let level of levels" [value]="level.value">
+            {{level.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Choose Lesson</mat-label>
+        <mat-select [(value)]="selectedLesson" (selectionChange)="getExercises()"
+          [disabled]="selectedLevel.trim().length <= 0">
+          <mat-option *ngFor="let lesson of lessons" [value]="lesson.id">
+            {{lesson.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutAlign="center center" *ngIf="selectedLevel.length != 0" style="margin-bottom: 10px;">
+        <button mat-raised-button color="accent" (click)="showLnForm('edit')" *ngIf="selectedLesson.length != 0">Edit
+          Lesson Name</button>
+        <button mat-raised-button color="green" style="margin-left:10px;" (click)="showLnForm('add')">Add New
+          Lesson</button>
+      </div>
+
+      <div *ngIf="showEditAdd" fxLayout="column">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>{{lessonformtitle}}</mat-label>
+          <input matInput placeholder="Lesson Name" [(ngModel)]="lessonName"
+            [disabled]="selectedLevel.trim().length <= 0">
+        </mat-form-field>
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <button mat-raised-button color="primary" (click)="addLesson()"
+            [disabled]="selectedLevel.trim().length <= 0 || lessonName.trim().length <= 7">{{lessonformbtn}}</button>
+          <button mat-raised-button color="warn" style="margin-left:10px;" (click)="showEditAdd = false">Cancel</button>
+        </div>
+
+      </div>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Choose Exercise</mat-label>
+        <mat-select [(value)]="selectedExercise" (selectionChange)="getExerciseData()"
+          [disabled]="selectedLesson.length == 0 || !selectedLesson ">
+          <mat-option *ngFor="let exercise of exercises" [value]="exercise.id">
+            {{exercise.name}} - {{exercise.type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutAlign="center center" *ngIf="selectedLesson.length != 0">
+        <button mat-raised-button color="accent" (click)="showexForm('edit')" *ngIf="selectedExercise.length != 0">Edit
+          Exercise Name</button>
+        <button mat-raised-button color="green" style="margin-left:10px;" (click)="showexForm('add')">Add New
+          Exercise</button>
+        <button mat-raised-button color="warn" style="margin-left:10px;" (click)="deleteEx()"
+          *ngIf="selectedExercise.length != 0">Delete Exercise</button>
+      </div>
+
+      <div *ngIf="showEditAddExercise" fxLayout="column">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Exercise Name</mat-label>
+          <input matInput placeholder="Exercise Name" [(ngModel)]="exerciseName"
+            [disabled]="selectedLesson.length == 0">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>{{exerciseformtitle}}</mat-label>
+          <mat-select [(value)]="exerciseType" [disabled]="selectedLesson.length == 0">
+            <mat-option *ngFor="let type of exerciseTypes" [value]="type.value">
+              {{type.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <button mat-raised-button color="primary" (click)="addExercise()"
+            [disabled]="selectedLesson.length === 0 || exerciseName.trim().length <= 7 || exerciseType.trim().length <= 4">{{exerciseformbtn}}</button>
+          <button mat-raised-button color="warn" style="margin-left:10px;"
+            (click)="showEditAddExercise = false">Cancel</button>
+        </div>
+      </div>
+
+      <div *ngIf="selectedExercise.length != 0" style="margin-top: 50px;">
+        <h3 *ngIf="selectedExercise.length != 0">Add Data to the above Exercise</h3>
+        <input type="file" (change)="onFileSelected($event)" accept=".csv" style="display: none;" #fileInput>
+        {{fileName || "No file uploaded yet."}}
+        <button mat-raised-button color="primary" (click)="fileInput.click()">Upload File</button>
+
+      </div>
+    </div>
+
+    <div fxFlex="70" style="background-color: blue;">two</div>
+  </div>
+</div>
